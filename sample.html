@@ -1,0 +1,82 @@
+<html>
+
+<head>
+    <title>API</title>
+    <style type="text/css">
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .tg td {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            padding: 10px 5px;
+            word-break: normal;
+        }
+
+        .tg th {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            overflow: hidden;
+            padding: 10px 5px;
+            word-break: normal;
+        }
+
+        .tg .tg-0pky {
+            border-color: inherit;
+            text-align: left;
+            vertical-align: top
+        }
+    </style>
+</head>
+
+<body style="text-align: center;">
+    <h1>API</h1>
+    <table class="tg">
+        <thead>
+            <tr>
+                <th class="tg-0pky">Endpoint</th>
+                <th class="tg-0pky">Request</th>
+                <th class="tg-0pky">Returns</th>
+                <th class="tg-0pky">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="tg-0pky">
+                    <a href="/success">/success</a>
+                </td>
+                <td class="tg-0pky">GET</td>
+                <td class="tg-0pky">total success count</td>
+                <td class="tg-0pky">GET this to increment the total success count by one</td>
+            </tr>
+            <tr>
+                <td class="tg-0pky">
+                    <a href="/error">/error</a>
+                </td>
+                <td class="tg-0pky">GET</td>
+                <td class="tg-0pky">total error count</td>
+                <td class="tg-0pky">GET this to increment the total error count by one</td>
+            </tr>
+            <tr>
+                <td class="tg-0pky">
+                    <a href="/reset">/reset</a>
+                </td>
+                <td class="tg-0pky">GET</td>
+                <td class="tg-0pky">None</td>
+                <td class="tg-0pky">GET this to reset total error and success count</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
