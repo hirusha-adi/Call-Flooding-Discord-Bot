@@ -20,13 +20,16 @@ with open(config_filename, "r", encoding="utf-8") as _config_file:
 with open(token_filename, "r", encoding="utf-8") as _token_file:
     TOKEN = _token_file.read()
 
+# Main Important Variables
+SUCCESS = 0
+ERRORED = 0
 
 client = commands.Bot(command_prefix=config['prefix'])
 app = flask.Flask(__name__)
 
 
 def run_web_app():
-    app.run(host='0.0.0.0', port=8090)
+    app.run(host='0.0.0.0', port=8080)
 
 
 def run_web_app_threaded():
@@ -34,13 +37,29 @@ def run_web_app_threaded():
     t.start()
 
 
+@app.route("/success")
+def web_success():
+    global SUCCESS
+    SUCCESS += 1
+    return f"{SUCCESS}"
+
+
+@app.route("/error")
+def web_error():
+    global ERRORED
+    ERRORED += 1
+    return ""
+
+
 @app.route("/")
 def web_index():
-    return "Hello World"
+    global SUCCESS, ERRORED
+    return f"{ERRORED}"
 
 
 @client.event
 async def on_ready():
+    global ERRORED
     print(f'Logged in as {client.user.name}')
     print(f'Discord.py API version: {discord.__version__}')
     print(f'Python version: {platform.python_version()}')
