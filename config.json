@@ -1,4 +1,5 @@
 {
     "prefix": ".",
-    "script_name": "Flood.sh"
+    "script_name": "Flood.sh",
+    "updates_channel": 983419930726793267
 }
