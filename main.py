@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import asyncio
 import platform
 from threading import Thread
 
@@ -23,6 +24,7 @@ with open(token_filename, "r", encoding="utf-8") as _token_file:
 # Main Important Variables
 SUCCESS = 0
 ERRORED = 0
+RESET_COUNT = 0
 
 client = commands.Bot(command_prefix=config['prefix'])
 app = flask.Flask(__name__)
@@ -48,13 +50,22 @@ def web_success():
 def web_error():
     global ERRORED
     ERRORED += 1
-    return ""
+    return f"{ERRORED}"
+
+
+@app.route("/reset")
+def web_reset():
+    global SUCCESS, ERRORED, RESET_COUNT
+    RESET_COUNT += 1
+    SUCCESS = 0
+    ERRORED = 0
+    return "Done"
 
 
 @app.route("/")
 def web_index():
-    global SUCCESS, ERRORED
-    return f"{ERRORED}"
+    global SUCCESS, ERRORED, RESET_COUNT
+    return flask.render_template_string(r"""<html><head> <title>API</title> <style type="text/css"> .tg { border-collapse: collapse; border-spacing: 0; } .tg td { border-color: black; border-style: solid; border-width: 1px; font-family: Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px; word-break: normal; } .tg th { border-color: black; border-style: solid; border-width: 1px; font-family: Arial, sans-serif; font-size: 14px; font-weight: normal; overflow: hidden; padding: 10px 5px; word-break: normal; } .tg .tg-0pky { border-color: inherit; text-align: left; vertical-align: top } </style></head><body> <h1 style="text-align: center;">API</h1> <table class="tg"> <thead> <tr> <th class="tg-0pky">Endpoint</th> <th class="tg-0pky">Request</th> <th class="tg-0pky">Returns</th> <th class="tg-0pky">Description</th> </tr> </thead> <tbody> <tr> <td class="tg-0pky"> <a href="/success">/success</a> </td> <td class="tg-0pky">GET</td> <td class="tg-0pky">total success count</td> <td class="tg-0pky">GET this to increment the total success count by one</td> </tr> <tr> <td class="tg-0pky"> <a href="/error">/error</a> </td> <td class="tg-0pky">GET</td> <td class="tg-0pky">total error count</td> <td class="tg-0pky">GET this to increment the total error count by one</td> </tr> <tr> <td class="tg-0pky"> <a href="/reset">/reset</a> </td> <td class="tg-0pky">GET</td> <td class="tg-0pky">None</td> <td class="tg-0pky">GET this to reset total error and success count</td> </tr> </tbody> </table> """ + r"""<h2>Success:</h2><h3>""" + str(SUCCESS) + r"""</h3><h2>Errored:</h2><h3>""" + str(ERRORED) + r"""</h3><h2>Reset Count:</h2><h3>""" + str(RESET_COUNT) + r"""</h3>""" + r"""</body></html>""")
 
 
 @client.event
@@ -67,4 +78,4 @@ async def on_ready():
     print('Bot is ready!')
 
 run_web_app_threaded()
-client.run(TOKEN)
+client.run(TOKEN, reconnect=True)
