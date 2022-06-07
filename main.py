@@ -23,10 +23,16 @@ with open(token_filename, "r", encoding="utf-8") as _token_file:
 
 # Main Important Variables
 SUCCESS = 0
+success_last = 0
 ERRORED = 0
+errored_last = 0
 RESET_COUNT = 0
+reset_count_last = 0
 
-client = commands.Bot(command_prefix=config['prefix'])
+client = commands.Bot(
+    command_prefix=config['prefix'],
+    intents=discord.Intents.all()
+)
 app = flask.Flask(__name__)
 
 
@@ -76,6 +82,15 @@ async def on_ready():
     print(f'Python version: {platform.python_version()}')
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"teamsds.net/discord"))
     print('Bot is ready!')
+
+    channel = client.get_channel(config['updates_channel'])
+    while True:
+        channel.send("Hello World. waiting 5 seconds")
+        asyncio.sleep(5)
+
+        if (SUCCESS == success_last) and (ERRORED == errored_last) \
+                and (RESET_COUNT == reset_count_last):
+            pass
 
 run_web_app_threaded()
 client.run(TOKEN, reconnect=True)
