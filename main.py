@@ -3,6 +3,7 @@ import os
 import asyncio
 import platform
 from threading import Thread
+from datetime import datetime
 
 import discord
 import flask
@@ -33,6 +34,8 @@ client = commands.Bot(
     intents=discord.Intents.all()
 )
 app = flask.Flask(__name__)
+
+client.remove_command('help')
 
 
 def run_web_app():
@@ -151,6 +154,37 @@ async def reset(ctx):
 
     await ctx.send(f"Done!")
 
+
+@client.command()
+async def help(ctx, subcommand=None):
+
+    if subcommand == "reset":
+        description = """```
+    
+        ```"""
+
+    elif subcommand == "flood":
+        description = """```
+        
+        ```"""
+
+    else:
+        description = """``` 
+        
+        ```"""
+
+    embed = discord.Embed(
+        title="GifGang",
+        color=0xff0000,
+        description=description,
+        timestamp=datetime.utcnow(),
+        url="https://gifgang.net/links"
+    )
+    embed.set_author(
+        name=str(client.user.name),
+        icon_url=str(client.user.avatar_url)
+    )
+    embed.set_footer(text=f"Reuqested by {ctx.author.name}")
 
 run_web_app_threaded()
 client.run(TOKEN, reconnect=True)
