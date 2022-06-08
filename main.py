@@ -128,7 +128,7 @@ async def flood(ctx, to, times):
     """
 
     try:
-        os.system(f"{config['script_name']} {to} {times}")
+        os.system(f"{config['script_name']} {times} {to}")
     except Exception as e:
         await ctx.send(f"```{e}```")
         return
