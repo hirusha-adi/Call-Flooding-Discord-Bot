@@ -165,6 +165,10 @@ async def help(ctx, subcommand=None):
         timestamp=datetime.utcnow(),
         url="https://gifgang.net/links"
     )
+    embed.set_author(
+        name=str(client.user.name),
+        icon_url=str(client.user.avatar_url)
+    )
 
     if subcommand == "reset":
         embed.add_field(
@@ -201,10 +205,6 @@ async def help(ctx, subcommand=None):
             value=f"`{config['prefix']}help`\n`{config['prefix']}flood`\n`{config['prefix']}reset`",
             inline=False
         )
-    embed.set_author(
-        name=str(client.user.name),
-        icon_url=str(client.user.avatar_url)
-    )
 
     embed.set_footer(text=f"Reuqested by {ctx.author.name}")
 
