@@ -47,24 +47,29 @@ def run_web_app_threaded():
 
 @app.route("/success")
 def web_success():
-    global SUCCESS
+    global SUCCESS, success_last
     SUCCESS += 1
+    success_last = SUCCESS - 1
     return f"{SUCCESS}"
 
 
 @app.route("/error")
 def web_error():
-    global ERRORED
+    global ERRORED, errored_last
     ERRORED += 1
+    errored_last = ERRORED - 1
     return f"{ERRORED}"
 
 
 @app.route("/reset")
 def web_reset():
-    global SUCCESS, ERRORED, RESET_COUNT
+    global SUCCESS, ERRORED, RESET_COUNT, reset_count_last, success_last, errored_last
     RESET_COUNT += 1
     SUCCESS = 0
     ERRORED = 0
+    success_last = SUCCESS
+    errored_last = ERRORED
+    reset_count_last = RESET_COUNT - 1
     return "Done"
 
 
@@ -76,7 +81,8 @@ def web_index():
 
 @client.event
 async def on_ready():
-    global ERRORED
+    global SUCCESS, ERRORED, RESET_COUNT, reset_count_last, success_last, errored_last
+
     print(f'Logged in as {client.user.name}')
     print(f'Discord.py API version: {discord.__version__}')
     print(f'Python version: {platform.python_version()}')
@@ -84,13 +90,15 @@ async def on_ready():
     print('Bot is ready!')
 
     channel = client.get_channel(config['updates_channel'])
-    while True:
-        channel.send("Hello World. waiting 5 seconds")
-        asyncio.sleep(5)
 
-        if (SUCCESS == success_last) and (ERRORED == errored_last) \
-                and (RESET_COUNT == reset_count_last):
-            pass
+    while True:
+        if not((SUCCESS == success_last) and (ERRORED == errored_last) and (RESET_COUNT == reset_count_last)):
+            success_last = SUCCESS
+            errored_last = ERRORED
+            reset_count_last = RESET_COUNT
+            await channel.send(f"**Success: ** `{SUCCESS}`\n**Error: ** `{ERRORED}`\n**Reset Count: ** `{RESET_COUNT}`\n")
+
+        await asyncio.sleep(config['check_time'])
 
 run_web_app_threaded()
 client.run(TOKEN, reconnect=True)
