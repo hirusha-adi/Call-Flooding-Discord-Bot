@@ -1,6 +1,5 @@
 import json
 import os
-import subprocess
 import asyncio
 import platform
 from threading import Thread
@@ -37,7 +36,7 @@ app = flask.Flask(__name__)
 
 
 def run_web_app():
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8088)
 
 
 def run_web_app_threaded():
@@ -91,14 +90,67 @@ async def on_ready():
 
     channel = client.get_channel(config['updates_channel'])
 
+    await channel.send(f"The bot is up and running on `{platform.platform()}` on Python `{platform.python_version()}` with Discord API version `{discord.__version__}`")
+
     while True:
         if not((SUCCESS == success_last) and (ERRORED == errored_last) and (RESET_COUNT == reset_count_last)):
             success_last = SUCCESS
             errored_last = ERRORED
             reset_count_last = RESET_COUNT
-            await channel.send(f"**Success: ** `{SUCCESS}`\n**Error: ** `{ERRORED}`\n**Reset Count: ** `{RESET_COUNT}`\n")
+            await channel.send(f"**Success: ** `{SUCCESS}`\n**Error: ** `{ERRORED}`\n**Reset Count: ** `{RESET_COUNT}`\n-----")
 
         await asyncio.sleep(config['check_time'])
+
+
+@client.command()
+async def flood(ctx, to, times):
+    """
+    Usage:
+        .flood <phone_number> <amount>
+
+    Examples:
+        .flood +94718898898 50
+
+    Arguments:
+        <phone_number>
+            The phone number to flood calls for
+
+        <amount>
+            The amount of calls to flood with
+
+    ---------------
+    Developer's Notes
+        ./Flood.sh +94782386009 10
+        Flood this phone number: +94782386009 for 10 times
+    """
+
+    try:
+        os.system(f"{config['script_name']} {to} {times}")
+    except Exception as e:
+        await ctx.send(f"```{e}```")
+        return
+
+    await ctx.send(f"Flooding {to} with {times} calls - Check <#{config['updates_channel']}> for updates")
+
+
+@client.command()
+async def reset(ctx):
+    """
+    Usage:
+        .reset
+    """
+
+    global SUCCESS, ERRORED, RESET_COUNT, reset_count_last, success_last, errored_last
+
+    RESET_COUNT += 1
+    SUCCESS = 0
+    ERRORED = 0
+    success_last = SUCCESS
+    errored_last = ERRORED
+    reset_count_last = RESET_COUNT - 1
+
+    await ctx.send(f"Done!")
+
 
 run_web_app_threaded()
 client.run(TOKEN, reconnect=True)
