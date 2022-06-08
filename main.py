@@ -159,7 +159,7 @@ async def reset(ctx):
 async def help(ctx, subcommand=None):
 
     embed = discord.Embed(
-        title="GifGang",
+        title="Hirusha",
         color=0xff0000,
         description="Help and Support",
         timestamp=datetime.utcnow(),
@@ -168,26 +168,34 @@ async def help(ctx, subcommand=None):
 
     if subcommand == "reset":
         embed.add_field(
-            name="",
-            value="",
+            name="Usage",
+            value=f"`{config['prefix']}reset`",
+        )
+        embed.add_field(
+            name="Description",
+            value=f"Resets the total successfull call count, total errored call count for <#{config['updates_channel']}>",
         )
     elif subcommand == "flood":
         embed.add_field(
             name="Usage",
             value=f"`{config['prefix']}flood <phone_number> <amount>`",
+            inline=False
         )
         embed.add_field(
             name="Examples",
             value=f"`{config['prefix']}flood +94718898898 50`",
+            inline=False
         )
         embed.add_field(
             name="Arguments",
             value="**<phone_number>**\n`The phone number to flood calls for`\n**<amount>**\n`The amount of calls to flood with`",
+            inline=False
         )
     else:
         embed.add_field(
             name="Commands",
-            value=f"`{config['prefix']}help`\n`{config['prefix']}flood`\n`{config['prefix']}reset`"
+            value=f"`{config['prefix']}help`\n`{config['prefix']}flood`\n`{config['prefix']}reset`",
+            inline=False
         )
     embed.set_author(
         name=str(client.user.name),
@@ -195,6 +203,8 @@ async def help(ctx, subcommand=None):
     )
 
     embed.set_footer(text=f"Reuqested by {ctx.author.name}")
+
+    await ctx.send(embed=embed)
 
 run_web_app_threaded()
 client.run(TOKEN, reconnect=True)
