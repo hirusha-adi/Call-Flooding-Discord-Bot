@@ -158,32 +158,42 @@ async def reset(ctx):
 @client.command()
 async def help(ctx, subcommand=None):
 
-    if subcommand == "reset":
-        description = """```
-    
-        ```"""
-
-    elif subcommand == "flood":
-        description = """```
-        
-        ```"""
-
-    else:
-        description = """``` 
-        
-        ```"""
-
     embed = discord.Embed(
         title="GifGang",
         color=0xff0000,
-        description=description,
+        description="Help and Support",
         timestamp=datetime.utcnow(),
         url="https://gifgang.net/links"
     )
+
+    if subcommand == "reset":
+        embed.add_field(
+            name="",
+            value="",
+        )
+    elif subcommand == "flood":
+        embed.add_field(
+            name="Usage",
+            value=f"`{config['prefix']}flood <phone_number> <amount>`",
+        )
+        embed.add_field(
+            name="Examples",
+            value=f"`{config['prefix']}flood +94718898898 50`",
+        )
+        embed.add_field(
+            name="Arguments",
+            value="**<phone_number>**\n`The phone number to flood calls for`\n**<amount>**\n`The amount of calls to flood with`",
+        )
+    else:
+        embed.add_field(
+            name="Commands",
+            value=f"`{config['prefix']}help`\n`{config['prefix']}flood`\n`{config['prefix']}reset`"
+        )
     embed.set_author(
         name=str(client.user.name),
         icon_url=str(client.user.avatar_url)
     )
+
     embed.set_footer(text=f"Reuqested by {ctx.author.name}")
 
 run_web_app_threaded()
