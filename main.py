@@ -159,9 +159,9 @@ async def reset(ctx):
 async def help(ctx, subcommand=None):
 
     embed = discord.Embed(
-        title="Hirusha",
+        title=f"Help for {client.user.name}",
         color=0xff0000,
-        description="Help and Support",
+        description=f"run `{config['prefix']}help [command_name]` to view additional information",
         timestamp=datetime.utcnow(),
         url="https://gifgang.net/links"
     )
@@ -190,6 +190,10 @@ async def help(ctx, subcommand=None):
             name="Arguments",
             value="**<phone_number>**\n`The phone number to flood calls for`\n**<amount>**\n`The amount of calls to flood with`",
             inline=False
+        )
+        embed.add_field(
+            name="Description",
+            value=f"Flood a given phone number for the given number of times with calls",
         )
     else:
         embed.add_field(
