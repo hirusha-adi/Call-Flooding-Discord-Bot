@@ -1,5 +1,6 @@
 {
     "prefix": ".",
     "script_name": "Flood.sh",
-    "updates_channel": 983419930726793267
+    "updates_channel": 983419930726793267,
+    "check_time": 3
 }
