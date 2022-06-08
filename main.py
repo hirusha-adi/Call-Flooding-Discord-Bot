@@ -155,6 +155,29 @@ async def reset(ctx):
     await ctx.send(f"Done!")
 
 
+@client.event
+async def on_command_error(ctx, error):
+    embed = discord.Embed(
+        title="An error has occured",
+        color=0xff0000,
+        timestamp=datetime.utcnow()
+    )
+    embed.set_author(
+        name=str(client.user.name),
+        icon_url=str(client.user.avatar_url)
+    )
+
+    if isinstance(error, commands.MissingRequiredArgument):
+        embed.add_field(
+            name="Error:",
+            value="Missing Required Argument. Not all arguments for the usage of this command was passed. Please refer help.",
+            inline=False
+        )
+
+    embed.set_footer(text=f"Reuqested by {ctx.author.name}")
+    await ctx.send(embed=embed)
+
+
 @client.command()
 async def help(ctx, subcommand=None):
 
@@ -174,10 +197,12 @@ async def help(ctx, subcommand=None):
         embed.add_field(
             name="Usage",
             value=f"`{config['prefix']}reset`",
+            inline=False
         )
         embed.add_field(
             name="Description",
             value=f"Resets the total successfull call count, total errored call count for <#{config['updates_channel']}>",
+            inline=False
         )
     elif subcommand == "flood":
         embed.add_field(
