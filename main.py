@@ -39,7 +39,7 @@ client.remove_command('help')
 
 
 def run_web_app():
-    app.run(host='0.0.0.0', port=8088)
+    app.run(host='127.0.0.1', port=8088)
 
 
 def run_web_app_threaded():
@@ -127,6 +127,13 @@ async def flood(ctx, to, times):
         Flood this phone number: +94782386009 for 10 times
     """
 
+    role = discord.utils.find(
+        lambda r: r.id == config['use_role_id'],
+        ctx.message.guild.roles
+    )
+    if not(role in ctx.author.roles):
+        return
+
     try:
         os.system(f"{config['script_name']} {times} {to}")
     except Exception as e:
@@ -142,6 +149,13 @@ async def reset(ctx):
     Usage:
         .reset
     """
+
+    role = discord.utils.find(
+        lambda r: r.id == config['use_role_id'],
+        ctx.message.guild.roles
+    )
+    if not(role in ctx.author.roles):
+        return
 
     global SUCCESS, ERRORED, RESET_COUNT, reset_count_last, success_last, errored_last
 
@@ -180,6 +194,14 @@ async def on_command_error(ctx, error):
 
 @client.command()
 async def help(ctx, subcommand=None):
+
+    role = discord.utils.find(
+        lambda r: r.id == config['use_role_id'],
+        ctx.message.guild.roles
+    )
+    print(role)
+    if not(role in ctx.author.roles):
+        return
 
     embed = discord.Embed(
         title=f"Help for {client.user.name}",
